@@ -13,15 +13,24 @@ fn main() {
     let file_content = fs::read_to_string(file_path).expect(&format!("cannot read file input.txt"));
 
     println!("input.txt has {} chars", file_content.len());
-    let mut max_elve_calories = 0;
+    let mut max_elve_calories = vec!(0,0,0);
     let mut current_elve_calories = 0;
     let mut elve_count = 0;
 
     for line in (file_content + "\n").lines() {
         let trimmed_line = line.trim();
         if trimmed_line == "" {
-            if current_elve_calories > max_elve_calories {
-                max_elve_calories = current_elve_calories
+            if current_elve_calories > max_elve_calories[0] {
+                max_elve_calories[2] = max_elve_calories[1];
+                max_elve_calories[1] = max_elve_calories[0];
+                max_elve_calories[0] = current_elve_calories;
+            }
+            else if current_elve_calories > max_elve_calories[1] {
+                max_elve_calories[2] = max_elve_calories[1];
+                max_elve_calories[1] = current_elve_calories;
+            }
+            else if current_elve_calories > max_elve_calories[2] {
+                max_elve_calories[2] = current_elve_calories;
             }
             current_elve_calories = 0;
             elve_count += 1;
@@ -33,7 +42,9 @@ fn main() {
     }
 
     println!("{} elves found", elve_count);
-    println!("{} calories carried by the elve carrying the most", max_elve_calories);
+    println!("{} calories carried by the elve carrying the most", max_elve_calories[0]);
+
+    println!("{} calories carried by the 3 elves carrying the most", max_elve_calories[0] + max_elve_calories[1] + max_elve_calories[2]);
 
 
 }
